@@ -5,8 +5,6 @@ const {
   GraphQLList,
 } = require('graphql');
 
-const EMPTY_ANSWER = {};
-
 const groupEdge = new GraphQLObjectType({
   name: 'groupEdge',
   fields: () => ({
@@ -27,20 +25,10 @@ const fourUsage = new GraphQLObjectType({
       resolve: async (_, args, context) => {
         let twos;
         try {
-          const driver = _.drivers ? _.drivers.two : context.drivers.two;
           twos = await driver.getSomething(_.id, context);
         } catch (err) {
-          twos = EMPTY_ANSWER;
-          twos.drivers = {
-            ...context.drivers,
-            self: this,
-          };
+          twos = {};
         }
-        context.drivers = {
-          ...twos.drivers,
-          two: twos.drivers.self,
-        };
-        context.drivers.self = undefined;
         return twos;
       },
     },
